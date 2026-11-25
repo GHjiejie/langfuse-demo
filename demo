@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")"
+
+compose=(docker compose --project-name langfuse-workorder-demo --project-directory "$PWD"
+  --env-file .local/stack.env -f .local/upstream-compose.yaml -f compose.local.yaml)
+case "${1:-help}" in
+  up)
+    python3 local_setup.py init
+    "${compose[@]}" up -d langfuse-web langfuse-worker
+    uv sync --locked
+    uv run --frozen python workorder.py init
+    exec .venv/bin/python web_ui.py start
+    ;;
+  ui) exec uv run --frozen python web_ui.py start ;;
+  down)
+    if [[ -x .venv/bin/python ]]; then .venv/bin/python web_ui.py stop; fi
+    exec "${compose[@]}" down
+    ;;
+  status)
+    "${compose[@]}" ps
+    if [[ -x .venv/bin/python ]]; then .venv/bin/python web_ui.py status; fi
+    ;;
+  login|set-key) exec python3 local_setup.py "$1" ;;
+  ask|feedback|compare) exec uv run --frozen python workorder.py "$@" ;;
+  *) printf '%s\n' '启动 ./demo up' '网页工作台 ./demo ui' '提问 ./demo ask --strategy current "怎样批量导出工单？"' '比较 ./demo compare' '反馈 ./demo feedback TRACE_ID up 或 down' '本地账号 ./demo login' '更换模型密钥 ./demo set-key' '状态 ./demo status' '停止 ./demo down' ;;
+esac

@@ -1,0 +1,36 @@
+# Overrides for the pinned upstream Compose file downloaded by local_setup.py.
+services:
+  langfuse-web:
+    ports: !override
+      - "127.0.0.1:3100:3000"
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://langfuse-web:3000/api/public/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 8s
+      start_period: 60s
+      retries: 36
+    environment:
+      LANGFUSE_S3_MEDIA_UPLOAD_ENDPOINT: http://127.0.0.1:3190
+  langfuse-worker:
+    ports: !reset []
+    restart: "no"
+    depends_on:
+      langfuse-web:
+        condition: service_healthy
+  langfuse-ai-gateway:
+    profiles: ["gateway"]
+  postgres:
+    ports: !reset []
+    restart: "no"
+  redis:
+    image: redis:7.4-alpine
+    ports: !reset []
+    restart: "no"
+  clickhouse:
+    ports: !reset []
+    restart: "no"
+  minio:
+    ports: !override
+      - "127.0.0.1:3190:9000"
+    restart: "no"

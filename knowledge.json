@@ -1,0 +1,39 @@
+{
+  "documents": [
+    {
+      "id": "EXPORT-2024",
+      "title": "批量导出工单",
+      "status": "archived",
+      "keywords": ["工单", "导出", "批量"],
+      "text": "批量导出工单时，打开「工单列表」，然后点击右上角的「批量下载」。"
+    },
+    {
+      "id": "EXPORT-2026",
+      "title": "批量导出工单",
+      "status": "current",
+      "keywords": ["工单", "导出", "批量"],
+      "text": "批量导出工单时，进入「报表中心」，选择「工单导出」，然后创建导出任务。"
+    },
+    {
+      "id": "TIMEZONE-2026",
+      "title": "修改个人时区",
+      "status": "current",
+      "keywords": ["时区", "时间显示"],
+      "text": "要修改时区，打开「个人设置」，在「时区」字段中选择所需时区并保存。"
+    }
+  ],
+  "cases": [
+    {
+      "question": "怎样批量导出工单？",
+      "source": "EXPORT-2026",
+      "required_terms": ["报表中心", "工单导出"],
+      "obsolete_terms": ["批量下载"]
+    },
+    {
+      "question": "在哪里修改时区？",
+      "source": "TIMEZONE-2026",
+      "required_terms": ["个人设置", "时区"],
+      "obsolete_terms": []
+    }
+  ]
+}
